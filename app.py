@@ -88,6 +88,17 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
 
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    total_scans = 0
+    total_findings = 0
+    critical_count = 0
+    return render_template('dashboard.html',
+                           total_scans=total_scans,
+                           total_findings=total_findings,
+                           critical_count=critical_count)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CodeGuard{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+    <h1>Dashboard</h1>
+    <a href="/scan" class="btn btn-primary">+ New scan</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px;">
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px;">
+        <div style="font-size: 36px; font-weight: bold;">{{ total_scans }}</div>
+        <div style="color: #8b90a8; margin-top: 6px;">Total scans</div>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px;">
+        <div style="font-size: 36px; font-weight: bold;">{{ total_findings }}</div>
+        <div style="color: #8b90a8; margin-top: 6px;">Total findings</div>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 24px;">
+        <div style="font-size: 36px; font-weight: bold; color: #ef4444;">{{ critical_count }}</div>
+        <div style="color: #8b90a8; margin-top: 6px;">Critical issues</div>
+    </div>
+</div>
+
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid #2e3352;">
+        <h2 style="font-size: 16px;">Recent scans</h2>
+    </div>
+    <div style="padding: 40px; text-align: center; color: #8b90a8;">
+        No scans yet. <a href="/scan" style="color: #6c63ff;">Run your first scan</a>
+    </div>
+</div>
+{% endblock %}
