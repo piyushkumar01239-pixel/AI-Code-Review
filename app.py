@@ -163,6 +163,13 @@ def result(scan_id):
     scan = Scan.query.filter_by(id=scan_id, user_id=current_user.id).first_or_404()
     return render_template('result.html', scan=scan)
 
+@app.route('/history')
+@login_required
+def history():
+    scans = Scan.query.filter_by(user_id=current_user.id)\
+                      .order_by(Scan.created_at.desc()).all()
+    return render_template('history.html', scans=scans)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
