@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login — CodeGuard{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 60px auto; background: #1a1d27; padding: 40px; border-radius: 12px; border: 1px solid #2e3352;">
+    <h2 style="margin-bottom: 24px; text-align: center;">Welcome back</h2>
+    <form method="POST">
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; margin-bottom: 6px; color: #8b90a8; font-size: 13px;">Email</label>
+            <input type="email" name="email" required
+                style="width: 100%; padding: 10px; background: #22263a; border: 1px solid #3a4060; border-radius: 8px; color: #e8eaf0; font-size: 14px;">
+        </div>
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 6px; color: #8b90a8; font-size: 13px;">Password</label>
+            <input type="password" name="password" required
+                style="width: 100%; padding: 10px; background: #22263a; border: 1px solid #3a4060; border-radius: 8px; color: #e8eaf0; font-size: 14px;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign in</button>
+    </form>
+    <p style="text-align: center; margin-top: 20px; color: #8b90a8; font-size: 14px;">
+        No account? <a href="/register" style="color: #6c63ff;">Register here</a>
+    </p>
+</div>
+{% endblock %}

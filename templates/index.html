@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}CodeGuard — AI Security Review{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 80px 0;">
+    <h1 style="font-size: 48px; margin-bottom: 16px;">🛡 CodeGuard</h1>
+    <p style="color: #8b90a8; font-size: 18px; margin-bottom: 32px;">AI-powered security code review</p>
+    {% if current_user.is_authenticated %}
+        <p style="color: #22c55e; margin-bottom: 24px;">Welcome, {{ current_user.username }}!</p>
+        <a href="/logout" class="btn btn-primary">Logout</a>
+    {% else %}
+        <a href="/register" class="btn btn-primary">Get started free</a>
+    {% endif %}
+</div>
+{% endblock %}
