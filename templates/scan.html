@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}New Scan — CodeGuard{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+    <h1>New security scan</h1>
+</div>
+
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid #2e3352; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 16px;">Paste your code</h2>
+        <select name="language" id="language" style="background: #22263a; border: 1px solid #3a4060; border-radius: 8px; padding: 6px 12px; color: #e8eaf0; font-size: 13px;">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="php">PHP</option>
+            <option value="java">Java</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+
+    <form method="POST" action="/scan">
+        <input type="hidden" name="language" id="language-hidden" value="python">
+        <textarea name="code" required rows="20"
+            placeholder="# Paste your code here..."
+            style="width: 100%; background: #0d0f17; border: none; border-bottom: 1px solid #2e3352; color: #e8eaf0; font-family: monospace; font-size: 13px; padding: 20px; resize: vertical;"></textarea>
+
+        <div style="padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #8b90a8; font-size: 13px;">Supports Python, JavaScript, PHP, Java and more</span>
+            <button type="submit" class="btn btn-primary">Run security scan →</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const sel = document.getElementById('language');
+    const hidden = document.getElementById('language-hidden');
+    sel.addEventListener('change', () => { hidden.value = sel.value; });
+</script>
+{% endblock %}

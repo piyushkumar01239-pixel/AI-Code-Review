@@ -99,6 +99,19 @@ def dashboard():
                            total_findings=total_findings,
                            critical_count=critical_count)
 
+@app.route('/scan', methods=['GET', 'POST'])
+@login_required
+def scan():
+    if request.method == 'POST':
+        code = request.form.get('code', '').strip()
+        language = request.form.get('language', 'python')
+        if not code:
+            flash('Please paste some code to scan.', 'error')
+            return render_template('scan.html')
+        flash('Scan coming soon!', 'success')
+        return redirect(url_for('dashboard'))
+    return render_template('scan.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
