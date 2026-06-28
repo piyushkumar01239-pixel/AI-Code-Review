@@ -17,19 +17,38 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# ── User Model ──────────────────────────────────────────────
+# ── Models ──────────────────────────────────────────────────
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    scans = db.relationship('Scan', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class Scan(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    language = db.Column(db.String(50), nullable=False)
+    code_snippet = db.Column(db.Text, nullable=False)
+    security_score = db.Column(db.Integer, default=100)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    findings = db.relationship('Finding', backref='scan', lazy=True, cascade='all, delete-orphan')
+
+class Finding(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    scan_id = db.Column(db.Integer, db.ForeignKey('scan.id'), nullable=False)
+    severity = db.Column(db.String(20), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    line_number = db.Column(db.Integer, nullable=True)
+    fix_suggestion = db.Column(db.Text, nullable=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -48,7 +67,6 @@ def register():
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
-
         if User.query.filter_by(username=username).first():
             flash('Username already taken.', 'error')
         elif User.query.filter_by(email=email).first():
@@ -63,7 +81,6 @@ def register():
             login_user(user)
             flash('Account created! Welcome.', 'success')
             return redirect(url_for('index'))
-
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -91,10 +108,15 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    total_scans = 0
-    total_findings = 0
-    critical_count = 0
+    scans = Scan.query.filter_by(user_id=current_user.id)\
+                      .order_by(Scan.created_at.desc()).limit(5).all()
+    total_scans = Scan.query.filter_by(user_id=current_user.id).count()
+    total_findings = db.session.query(Finding)\
+        .join(Scan).filter(Scan.user_id == current_user.id).count()
+    critical_count = db.session.query(Finding)\
+        .join(Scan).filter(Scan.user_id == current_user.id, Finding.severity == 'critical').count()
     return render_template('dashboard.html',
+                           scans=scans,
                            total_scans=total_scans,
                            total_findings=total_findings,
                            critical_count=critical_count)
@@ -108,9 +130,38 @@ def scan():
         if not code:
             flash('Please paste some code to scan.', 'error')
             return render_template('scan.html')
-        flash('Scan coming soon!', 'success')
-        return redirect(url_for('dashboard'))
+
+        from scanner.analyzer import scan_code, calculate_score
+        findings_data = scan_code(code)
+        score = calculate_score(findings_data)
+
+        new_scan = Scan(user_id=current_user.id,
+                        language=language,
+                        code_snippet=code,
+                        security_score=score)
+        db.session.add(new_scan)
+        db.session.commit()
+
+        for f in findings_data:
+            finding = Finding(
+                scan_id=new_scan.id,
+                severity=f['severity'],
+                title=f['title'],
+                description=f['description'],
+                line_number=f.get('line_number'),
+                fix_suggestion=f['fix'],
+            )
+            db.session.add(finding)
+        db.session.commit()
+
+        return redirect(url_for('result', scan_id=new_scan.id))
     return render_template('scan.html')
+
+@app.route('/result/<int:scan_id>')
+@login_required
+def result(scan_id):
+    scan = Scan.query.filter_by(id=scan_id, user_id=current_user.id).first_or_404()
+    return render_template('result.html', scan=scan)
 
 if __name__ == '__main__':
     with app.app_context():

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Scan Results — CodeGuard{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+    <div>
+        <h1>Scan results</h1>
+        <p style="color: #8b90a8; margin-top: 6px;">{{ scan.language|title }} · {{ scan.created_at.strftime('%B %d, %Y') }}</p>
+    </div>
+    <a href="/scan" class="btn btn-primary">+ New scan</a>
+</div>
+
+<!-- Score banner -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px; margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 40px;">
+        <div>
+            <div style="font-size: 56px; font-weight: bold;
+                color: {% if scan.security_score >= 80 %}#22c55e{% elif scan.security_score >= 50 %}#f59e0b{% else %}#ef4444{% endif %};">
+                {{ scan.security_score }}<span style="font-size: 24px; color: #8b90a8;">/100</span>
+            </div>
+            <div style="color: #8b90a8; margin-top: 4px;">Security score</div>
+        </div>
+        <div>
+            {% if scan.findings|length == 0 %}
+                <p style="color: #22c55e; font-size: 18px;">✅ No vulnerabilities found!</p>
+            {% else %}
+                <p style="margin-bottom: 12px;">Found <strong>{{ scan.findings|length }}</strong> issue{{ 's' if scan.findings|length != 1 }}:</p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    {% set critical = scan.findings|selectattr('severity', 'eq', 'critical')|list|length %}
+                    {% set high = scan.findings|selectattr('severity', 'eq', 'high')|list|length %}
+                    {% set medium = scan.findings|selectattr('severity', 'eq', 'medium')|list|length %}
+                    {% set low = scan.findings|selectattr('severity', 'eq', 'low')|list|length %}
+                    {% if critical > 0 %}<span style="background: rgba(239,68,68,0.2); color: #ef4444; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">{{ critical }} critical</span>{% endif %}
+                    {% if high > 0 %}<span style="background: rgba(249,115,22,0.2); color: #f97316; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">{{ high }} high</span>{% endif %}
+                    {% if medium > 0 %}<span style="background: rgba(245,158,11,0.2); color: #f59e0b; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">{{ medium }} medium</span>{% endif %}
+                    {% if low > 0 %}<span style="background: rgba(34,197,94,0.2); color: #22c55e; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">{{ low }} low</span>{% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Findings -->
+{% for severity, color in [('critical', '#ef4444'), ('high', '#f97316'), ('medium', '#f59e0b'), ('low', '#22c55e')] %}
+    {% set group = scan.findings|selectattr('severity', 'eq', severity)|list %}
+    {% if group %}
+        <h2 style="color: {{ color }}; margin-bottom: 12px; font-size: 16px;">{{ severity|title }} severity</h2>
+        {% for finding in group %}
+        <div style="background: #1a1d27; border: 1px solid #2e3352; border-left: 3px solid {{ color }}; border-radius: 0 12px 12px 0; margin-bottom: 12px;">
+            <div style="padding: 14px 20px; border-bottom: 1px solid #2e3352; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 15px;">{{ finding.title }}</h3>
+                {% if finding.line_number %}
+                    <span style="color: #8b90a8; font-size: 12px; font-family: monospace;">Line {{ finding.line_number }}</span>
+                {% endif %}
+            </div>
+            <div style="padding: 16px 20px;">
+                <p style="color: #8b90a8; font-size: 14px; margin-bottom: 12px;">{{ finding.description }}</p>
+                <div style="background: #22263a; border-radius: 8px; padding: 10px 14px; font-size: 13px;">
+                    <strong>Fix:</strong> {{ finding.fix_suggestion }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+<!-- Code preview -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; margin-top: 24px;">
+    <div style="padding: 16px 24px; border-bottom: 1px solid #2e3352;">
+        <h2 style="font-size: 16px;">Scanned code</h2>
+    </div>
+    <pre style="background: #0d0f17; padding: 20px; overflow-x: auto; font-family: monospace; font-size: 12px; color: #c8ccdc; line-height: 1.7;">{{ scan.code_snippet }}</pre>
+</div>
+
+<div style="display: flex; justify-content: space-between; margin-top: 24px;">
+    <a href="/dashboard" class="btn" style="background: #22263a; color: #e8eaf0;">← Dashboard</a>
+    <a href="/scan" class="btn btn-primary">Scan again</a>
+</div>
+{% endblock %}
