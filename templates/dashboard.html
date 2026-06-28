@@ -7,6 +7,7 @@
     <a href="/scan" class="btn btn-primary">+ New scan</a>
 </div>
 
+<!-- Stats -->
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px;">
     <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px;">
         <div style="font-size: 36px; font-weight: bold;">{{ total_scans }}</div>
@@ -22,12 +23,47 @@
     </div>
 </div>
 
+<!-- Recent scans -->
 <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px;">
-    <div style="padding: 20px 24px; border-bottom: 1px solid #2e3352;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid #2e3352; display: flex; justify-content: space-between; align-items: center;">
         <h2 style="font-size: 16px;">Recent scans</h2>
+        <a href="/history" style="color: #6c63ff; font-size: 14px;">View all →</a>
     </div>
-    <div style="padding: 40px; text-align: center; color: #8b90a8;">
+
+    {% if scans %}
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid #2e3352;">
+                <th style="text-align: left; padding: 12px 24px; color: #8b90a8; font-size: 12px; text-transform: uppercase;">Language</th>
+                <th style="text-align: left; padding: 12px 24px; color: #8b90a8; font-size: 12px; text-transform: uppercase;">Score</th>
+                <th style="text-align: left; padding: 12px 24px; color: #8b90a8; font-size: 12px; text-transform: uppercase;">Findings</th>
+                <th style="text-align: left; padding: 12px 24px; color: #8b90a8; font-size: 12px; text-transform: uppercase;">Date</th>
+                <th style="padding: 12px 24px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scan in scans %}
+            <tr style="border-bottom: 1px solid #2e3352;">
+                <td style="padding: 14px 24px;">
+                    <span style="background: #22263a; padding: 3px 10px; border-radius: 20px; font-size: 12px;">{{ scan.language }}</span>
+                </td>
+                <td style="padding: 14px 24px; font-weight: 600;
+                    color: {% if scan.security_score >= 80 %}#22c55e{% elif scan.security_score >= 50 %}#f59e0b{% else %}#ef4444{% endif %};">
+                    {{ scan.security_score }}/100
+                </td>
+                <td style="padding: 14px 24px;">{{ scan.findings|length }} issue{{ 's' if scan.findings|length != 1 }}</td>
+                <td style="padding: 14px 24px; color: #8b90a8;">{{ scan.created_at.strftime('%b %d, %Y') }}</td>
+                <td style="padding: 14px 24px;">
+                    <a href="/result/{{ scan.id }}" style="color: #6c63ff; font-size: 14px;">View →</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="padding: 60px; text-align: center; color: #8b90a8;">
         No scans yet. <a href="/scan" style="color: #6c63ff;">Run your first scan</a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
