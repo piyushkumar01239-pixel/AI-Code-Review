@@ -40,6 +40,17 @@
     </div>
 </div>
 
+<!-- AI Summary -->
+{% if scan.ai_summary %}
+<div style="background: #1a1d27; border: 1px solid #6c63ff; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+        <span style="font-size: 20px;">🤖</span>
+        <h2 style="font-size: 16px; color: #6c63ff;">AI Summary</h2>
+    </div>
+    <p style="color: #8b90a8; font-size: 14px; line-height: 1.7;">{{ scan.ai_summary }}</p>
+</div>
+{% endif %}
+
 <!-- Findings -->
 {% for severity, color in [('critical', '#ef4444'), ('high', '#f97316'), ('medium', '#f59e0b'), ('low', '#22c55e')] %}
     {% set group = scan.findings|selectattr('severity', 'eq', severity)|list %}
