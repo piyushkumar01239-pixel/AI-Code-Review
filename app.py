@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -197,6 +197,48 @@ def history():
     scans = Scan.query.filter_by(user_id=current_user.id)\
                       .order_by(Scan.created_at.desc()).all()
     return render_template('history.html', scans=scans)
+
+@app.route('/api/chat', methods=['POST'])
+@login_required
+def chat():
+    data = request.get_json()
+    user_message = data.get('message', '').strip()
+    language = data.get('language', 'python')
+    code = data.get('code', '')
+    findings = data.get('findings', '')
+
+    if not user_message:
+        return jsonify({'reply': 'Please type a message.'})
+
+    try:
+        from groq import Groq
+        client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+        response = client.chat.completions.create(
+            model='llama-3.3-70b-versatile',
+            max_tokens=1000,
+            messages=[
+                {
+                    'role': 'system',
+                    'content': (
+                        f"You are a security code review assistant. "
+                        f"The user has scanned the following {language} code:\n\n"
+                        f"```{language}\n{code}\n```\n\n"
+                        f"Security findings:\n{findings}\n\n"
+                        f"Help the user fix their code, explain vulnerabilities, "
+                        f"or rewrite code securely. Be concise and friendly. "
+                        f"When showing code, use code blocks."
+                    )
+                },
+                {
+                    'role': 'user',
+                    'content': user_message
+                }
+            ]
+        )
+        reply = response.choices[0].message.content
+        return jsonify({'reply': reply})
+    except Exception as e:
+        return jsonify({'reply': f'AI error: {str(e)}'})
 
 if __name__ == '__main__':
     with app.app_context():

@@ -83,8 +83,108 @@
     <pre style="background: #0d0f17; padding: 20px; overflow-x: auto; font-family: monospace; font-size: 12px; color: #c8ccdc; line-height: 1.7;">{{ scan.code_snippet }}</pre>
 </div>
 
+<!-- AI Chat Box -->
+<div style="background: #1a1d27; border: 1px solid #6c63ff; border-radius: 12px; margin-top: 24px; overflow: hidden;">
+    <div style="padding: 16px 24px; border-bottom: 1px solid #2e3352; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 20px;">🤖</span>
+        <h2 style="font-size: 16px; color: #6c63ff;">AI Assistant</h2>
+        <span style="color: #8b90a8; font-size: 13px;">— Ask me to fix your code or explain any issue</span>
+    </div>
+    <div id="chat-messages" style="height: 320px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: #22263a; padding: 12px 16px; border-radius: 10px; max-width: 80%; font-size: 14px; line-height: 1.6; color: #e8eaf0;">
+            👋 Hi! I've reviewed your code and found <strong>{{ scan.findings|length }} issue{{ 's' if scan.findings|length != 1 }}</strong>. Ask me anything — I can fix your code, explain any vulnerability, or rewrite it securely!
+        </div>
+    </div>
+    <div style="padding: 16px 24px; border-top: 1px solid #2e3352; display: flex; gap: 10px;">
+        <input type="text" id="chat-input"
+            placeholder="e.g. Fix the SQL injection, or rewrite my code securely..."
+            style="flex: 1; background: #22263a; border: 1px solid #3a4060; border-radius: 8px; padding: 10px 14px; color: #e8eaf0; font-size: 14px; font-family: Arial, sans-serif;">
+        <button onclick="sendMessage()" id="send-btn"
+            style="background: #6c63ff; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 600;">
+            Send
+        </button>
+    </div>
+</div>
+
+<div id="scan-context" style="display: none;">
+    <span id="scan-language">{{ scan.language }}</span>
+    <span id="scan-code">{{ scan.code_snippet | e }}</span>
+    <span id="scan-findings">{% for f in scan.findings %}[{{ f.severity|upper }}] {{ f.title }} on line {{ f.line_number }} — {{ f.description }} Fix: {{ f.fix_suggestion }}{% if not loop.last %} | {% endif %}{% endfor %}</span>
+</div>
+
 <div style="display: flex; justify-content: space-between; margin-top: 24px;">
     <a href="/dashboard" class="btn" style="background: #22263a; color: #e8eaf0;">← Dashboard</a>
     <a href="/scan" class="btn btn-primary">Scan again</a>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const language = document.getElementById('scan-language').textContent;
+    const code = document.getElementById('scan-code').textContent;
+    const findings = document.getElementById('scan-findings').textContent;
+
+    function addMessage(text, isUser) {
+        const div = document.createElement('div');
+        div.style.cssText = `
+            background: ${isUser ? '#6c63ff' : '#22263a'};
+            padding: 12px 16px;
+            border-radius: 10px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e8eaf0;
+            align-self: ${isUser ? 'flex-end' : 'flex-start'};
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        `;
+        div.textContent = text;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function addTyping() {
+        const div = document.createElement('div');
+        div.id = 'typing';
+        div.style.cssText = 'background: #22263a; padding: 12px 16px; border-radius: 10px; max-width: 80%; font-size: 14px; color: #8b90a8;';
+        div.textContent = '🤖 Thinking...';
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function removeTyping() {
+        const typing = document.getElementById('typing');
+        if (typing) typing.remove();
+    }
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+        addMessage(message, true);
+        chatInput.value = '';
+        sendBtn.disabled = true;
+        addTyping();
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, language, code, findings })
+            });
+            const data = await response.json();
+            removeTyping();
+            addMessage(data.reply, false);
+        } catch (error) {
+            removeTyping();
+            addMessage('Sorry, something went wrong. Please try again.', false);
+        }
+        sendBtn.disabled = false;
+    }
+
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
 {% endblock %}
