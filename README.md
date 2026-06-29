@@ -1,31 +1,50 @@
 # 🛡 CodeGuard — AI-Powered Security Code Review
 
-A web application that finds security vulnerabilities in your code instantly.
+> Find security vulnerabilities in your code instantly using pattern detection and AI-powered explanations.
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Flask](https://img.shields.io/badge/Flask-3.0-green)
+![AI](https://img.shields.io/badge/AI-Groq%20LLaMA-orange)
+![License](https://img.shields.io/badge/License-MIT-purple)
+
+---
 
 ## 🚀 What it does
 
-- Detects security vulnerabilities in your code
-- Gives each scan a security score (0-100)
-- Shows severity levels (Critical, High, Medium, Low)
-- Explains each issue and how to fix it
-- Saves scan history so you can track progress
+- ✅ Detects security vulnerabilities instantly
+- ✅ Gives each scan a security score (0-100)
+- ✅ Shows severity levels (Critical, High, Medium, Low)
+- ✅ Explains each issue in plain English
+- ✅ Suggests concrete fixes for every finding
+- ✅ AI-powered summary using Groq LLaMA (free!)
+- ✅ Upload files directly (.py, .js, .php, .java)
+- ✅ Scan history to track progress over time
+
+---
 
 ## 🔍 Vulnerabilities detected
 
-- Hardcoded passwords and API keys
-- SQL Injection
-- Cross-Site Scripting (XSS)
-- Command Injection (eval, exec)
-- Weak cryptography (MD5, SHA1)
-- Unsafe deserialization (pickle)
-- Flask debug mode exposure
+| Vulnerability | Severity |
+|---------------|----------|
+| Hardcoded passwords & API keys | 🔴 Critical |
+| SQL Injection | 🔴 Critical |
+| Command Injection | 🔴 Critical |
+| Unsafe deserialization (pickle) | 🔴 Critical |
+| Dangerous eval() / exec() | 🟠 High |
+| Weak cryptography (MD5, SHA1) | 🟠 High |
+| Flask debug mode exposure | 🟡 Medium |
+
+---
 
 ## 🛠 Tech stack
 
-- Python + Flask
-- SQLite database
-- Flask-Login for authentication
-- Werkzeug for password hashing
+- **Backend:** Python + Flask
+- **Database:** SQLite
+- **Auth:** Flask-Login + Werkzeug
+- **AI:** Groq LLaMA (free API)
+- **Frontend:** HTML + CSS (no framework)
+
+---
 
 ## ⚙️ Setup
 
@@ -36,30 +55,39 @@ cd AI-Code-Review
 
 # Create virtual environment
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux
 
 # Install packages
 pip install -r requirements.txt
 
 # Set up environment
 cp .env.example .env
+# Add your GROQ_API_KEY to .env
 
 # Run the app
 python app.py
 ```
 
-Open http://127.0.0.1:5000 in your browser.
+Open **http://127.0.0.1:5000** in your browser.
 
-## 📌 Project status
-
-This project is being built incrementally — each commit adds a new feature.
+---
 
 ## 🗺 Roadmap
 
 - [x] User authentication
-- [x] Security scanner
+- [x] Security pattern scanner
+- [x] AI-powered summaries (Groq)
+- [x] File upload scanning
 - [x] Scan history
 - [x] Dashboard with stats
-- [ ] File upload scanning
 - [ ] PDF report download
-- [ ] AI-powered explanations
+- [ ] More language support
+- [ ] GitHub repo scanning
+- [ ] VS Code extension
+
+---
+
+## 📄 License
+
+MIT — free to use and modify.
