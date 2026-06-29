@@ -1,4 +1,6 @@
 import re
+import os
+from anthropic import Anthropic
 
 PATTERNS = [
     {
@@ -82,3 +84,32 @@ def calculate_score(findings):
     for f in findings:
         score -= deductions.get(f['severity'], 0)
     return max(0, score)
+
+
+def get_ai_summary(code, findings, language):
+    api_key = os.getenv('ANTHROPIC_API_KEY')
+    if not api_key:
+        return None
+    try:
+        client = Anthropic(api_key=api_key)
+        findings_text = '\n'.join(
+            f"- [{f['severity'].upper()}] {f['title']} on line {f['line_number']}"
+            for f in findings
+        ) if findings else '- No issues detected'
+
+        message = client.messages.create(
+            model='claude-sonnet-4-6',
+            max_tokens=300,
+            messages=[{
+                'role': 'user',
+                'content': (
+                    f"You are a security code reviewer. Briefly summarize these findings "
+                    f"for a developer scanning {language} code. Be friendly and concise (3-4 sentences max).\n\n"
+                    f"Findings:\n{findings_text}"
+                )
+            }]
+        )
+        return message.content[0].text
+    except Exception as e:
+        print(f"AI summary failed: {e}")
+        return None

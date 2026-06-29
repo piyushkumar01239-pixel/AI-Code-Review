@@ -45,6 +45,7 @@ class Scan(db.Model):
     language = db.Column(db.String(50), nullable=False)
     code_snippet = db.Column(db.Text, nullable=False)
     security_score = db.Column(db.Integer, default=100)
+    ai_summary = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     findings = db.relationship('Finding', backref='scan', lazy=True, cascade='all, delete-orphan')
 
@@ -156,14 +157,16 @@ def scan():
             flash('Please paste code or upload a file.', 'error')
             return render_template('scan.html')
 
-        from scanner.analyzer import scan_code, calculate_score
+        from scanner.analyzer import scan_code, calculate_score, get_ai_summary
         findings_data = scan_code(code)
         score = calculate_score(findings_data)
+        ai_summary = get_ai_summary(code, findings_data, language)
 
         new_scan = Scan(user_id=current_user.id,
-                        language=language,
-                        code_snippet=code,
-                        security_score=score)
+                language=language,
+                code_snippet=code,
+                security_score=score,
+                ai_summary=ai_summary)
         db.session.add(new_scan)
         db.session.commit()
 
