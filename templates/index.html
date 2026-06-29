@@ -6,45 +6,63 @@
 <!-- Hero -->
 <div style="text-align: center; padding: 80px 0 60px;">
     <div style="display: inline-block; background: rgba(108,99,255,0.15); color: #6c63ff; padding: 6px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 24px;">
-        Open source · Free to use
+        🛡 Free & Open Source
     </div>
-    <h1 style="font-size: 48px; font-weight: bold; margin-bottom: 16px; line-height: 1.2;">
+    <h1 style="font-size: 52px; font-weight: bold; margin-bottom: 16px; line-height: 1.2;">
         Find security flaws<br>before attackers do
     </h1>
-    <p style="color: #8b90a8; font-size: 18px; margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto;">
-        Paste your code and get instant vulnerability detection with fix suggestions.
+    <p style="color: #8b90a8; font-size: 18px; margin-bottom: 36px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        Paste your code and get instant vulnerability detection, AI-powered explanations and fix suggestions.
     </p>
     {% if current_user.is_authenticated %}
-        <a href="/scan" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Start scanning</a>
+        <a href="/scan" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Start scanning →</a>
         <a href="/dashboard" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">My dashboard</a>
     {% else %}
-        <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Get started free</a>
+        <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Get started free →</a>
         <a href="/login" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">Sign in</a>
     {% endif %}
 </div>
 
+<!-- Stats bar -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px;">
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px; text-align: center;">
+        <div style="font-size: 32px; font-weight: bold; color: #6c63ff;">8+</div>
+        <div style="color: #8b90a8; margin-top: 6px; font-size: 14px;">Vulnerability types detected</div>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px; text-align: center;">
+        <div style="font-size: 32px; font-weight: bold; color: #22c55e;">Free</div>
+        <div style="color: #8b90a8; margin-top: 6px; font-size: 14px;">No credit card required</div>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 24px; text-align: center;">
+        <div style="font-size: 32px; font-weight: bold; color: #f59e0b;">AI</div>
+        <div style="color: #8b90a8; margin-top: 6px; font-size: 14px;">Powered by Groq LLaMA</div>
+    </div>
+</div>
+
 <!-- Features -->
+<h2 style="text-align: center; font-size: 28px; margin-bottom: 32px;">How it works</h2>
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px;">
     <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
+        <div style="font-size: 28px; margin-bottom: 16px;">📋</div>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">1. Paste your code</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Paste code directly or upload a file. Supports Python, JavaScript, PHP, Java and more.</p>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
         <div style="font-size: 28px; margin-bottom: 16px;">🔍</div>
-        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Pattern detection</h3>
-        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Catches SQL injection, XSS, hardcoded secrets, command injection, weak crypto and more instantly.</p>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">2. Instant analysis</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Our scanner detects vulnerabilities instantly using pattern matching and assigns severity levels.</p>
     </div>
     <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
         <div style="font-size: 28px; margin-bottom: 16px;">🤖</div>
-        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">AI explanations</h3>
-        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Every finding comes with a plain English explanation of the risk and a concrete fix suggestion.</p>
-    </div>
-    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
-        <div style="font-size: 28px; margin-bottom: 16px;">📊</div>
-        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Security score</h3>
-        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Get a 0-100 score for each scan so you can track improvement over time as you fix issues.</p>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">3. AI explanation</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Get a plain English summary of all findings with concrete fix suggestions powered by Groq AI.</p>
     </div>
 </div>
 
 <!-- What we detect -->
 <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 40px; margin-bottom: 60px; text-align: center;">
-    <h2 style="font-size: 24px; margin-bottom: 32px;">What we detect</h2>
+    <h2 style="font-size: 24px; margin-bottom: 8px;">What we detect</h2>
+    <p style="color: #8b90a8; font-size: 14px; margin-bottom: 28px;">Common security vulnerabilities across multiple languages</p>
     <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
         {% for icon, name in [
             ('🔐', 'SQL Injection'),
@@ -65,10 +83,11 @@
 
 <!-- CTA -->
 {% if not current_user.is_authenticated %}
-<div style="text-align: center; padding: 60px 0;">
+<div style="text-align: center; background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 60px; margin-bottom: 40px;">
     <h2 style="font-size: 28px; margin-bottom: 16px;">Ready to secure your code?</h2>
     <p style="color: #8b90a8; margin-bottom: 32px;">Free to use. No credit card required.</p>
-    <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px;">Create free account</a>
+    <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Create free account →</a>
+    <a href="/login" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">Sign in</a>
 </div>
 {% endif %}
 
