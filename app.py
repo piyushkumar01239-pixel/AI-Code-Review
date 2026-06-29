@@ -6,6 +6,13 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = {'py', 'js', 'php', 'java', 'txt'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -127,8 +134,26 @@ def scan():
     if request.method == 'POST':
         code = request.form.get('code', '').strip()
         language = request.form.get('language', 'python')
+
+        # Check if a file was uploaded
+        if 'file' in request.files:
+            file = request.files['file']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join('uploads', filename)
+                file.save(filepath)
+                with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                    code = f.read()
+                ext = filename.rsplit('.', 1)[1].lower()
+                language = {
+                    'py': 'python',
+                    'js': 'javascript',
+                    'php': 'php',
+                    'java': 'java'
+                }.get(ext, 'other')
+
         if not code:
-            flash('Please paste some code to scan.', 'error')
+            flash('Please paste code or upload a file.', 'error')
             return render_template('scan.html')
 
         from scanner.analyzer import scan_code, calculate_score
