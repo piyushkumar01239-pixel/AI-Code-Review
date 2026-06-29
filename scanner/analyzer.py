@@ -1,6 +1,6 @@
 import re
 import os
-from anthropic import Anthropic
+from groq import Groq
 
 PATTERNS = [
     {
@@ -87,18 +87,18 @@ def calculate_score(findings):
 
 
 def get_ai_summary(code, findings, language):
-    api_key = os.getenv('ANTHROPIC_API_KEY')
+    api_key = os.getenv('GROQ_API_KEY')
     if not api_key:
         return None
     try:
-        client = Anthropic(api_key=api_key)
+        client = Groq(api_key=api_key)
         findings_text = '\n'.join(
             f"- [{f['severity'].upper()}] {f['title']} on line {f['line_number']}"
             for f in findings
         ) if findings else '- No issues detected'
 
-        message = client.messages.create(
-            model='claude-sonnet-4-6',
+        response = client.chat.completions.create(
+            model='llama-3.3-70b-versatile',
             max_tokens=300,
             messages=[{
                 'role': 'user',
@@ -109,7 +109,7 @@ def get_ai_summary(code, findings, language):
                 )
             }]
         )
-        return message.content[0].text
+        return response.choices[0].message.content
     except Exception as e:
         print(f"AI summary failed: {e}")
         return None

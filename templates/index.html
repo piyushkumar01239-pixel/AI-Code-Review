@@ -1,15 +1,75 @@
 {% extends "base.html" %}
-{% block title %}CodeGuard — AI Security Review{% endblock %}
+{% block title %}CodeGuard — AI Security Code Review{% endblock %}
 
 {% block content %}
-<div style="text-align: center; padding: 80px 0;">
-    <h1 style="font-size: 48px; margin-bottom: 16px;">🛡 CodeGuard</h1>
-    <p style="color: #8b90a8; font-size: 18px; margin-bottom: 32px;">AI-powered security code review</p>
+
+<!-- Hero -->
+<div style="text-align: center; padding: 80px 0 60px;">
+    <div style="display: inline-block; background: rgba(108,99,255,0.15); color: #6c63ff; padding: 6px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 24px;">
+        Open source · Free to use
+    </div>
+    <h1 style="font-size: 48px; font-weight: bold; margin-bottom: 16px; line-height: 1.2;">
+        Find security flaws<br>before attackers do
+    </h1>
+    <p style="color: #8b90a8; font-size: 18px; margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto;">
+        Paste your code and get instant vulnerability detection with fix suggestions.
+    </p>
     {% if current_user.is_authenticated %}
-        <p style="color: #22c55e; margin-bottom: 24px;">Welcome, {{ current_user.username }}!</p>
-        <a href="/logout" class="btn btn-primary">Logout</a>
+        <a href="/scan" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Start scanning</a>
+        <a href="/dashboard" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">My dashboard</a>
     {% else %}
-        <a href="/register" class="btn btn-primary">Get started free</a>
+        <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Get started free</a>
+        <a href="/login" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">Sign in</a>
     {% endif %}
 </div>
+
+<!-- Features -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px;">
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
+        <div style="font-size: 28px; margin-bottom: 16px;">🔍</div>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Pattern detection</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Catches SQL injection, XSS, hardcoded secrets, command injection, weak crypto and more instantly.</p>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
+        <div style="font-size: 28px; margin-bottom: 16px;">🤖</div>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">AI explanations</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Every finding comes with a plain English explanation of the risk and a concrete fix suggestion.</p>
+    </div>
+    <div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 28px;">
+        <div style="font-size: 28px; margin-bottom: 16px;">📊</div>
+        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Security score</h3>
+        <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Get a 0-100 score for each scan so you can track improvement over time as you fix issues.</p>
+    </div>
+</div>
+
+<!-- What we detect -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 40px; margin-bottom: 60px; text-align: center;">
+    <h2 style="font-size: 24px; margin-bottom: 32px;">What we detect</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+        {% for icon, name in [
+            ('🔐', 'SQL Injection'),
+            ('⚡', 'Cross-Site Scripting'),
+            ('💾', 'Hardcoded secrets'),
+            ('💻', 'Command injection'),
+            ('🔑', 'Weak cryptography'),
+            ('🐍', 'Unsafe eval/exec'),
+            ('🥒', 'Insecure deserialization'),
+            ('⚙️', 'Debug mode exposure')
+        ] %}
+        <div style="background: #22263a; border: 1px solid #2e3352; border-radius: 20px; padding: 8px 16px; font-size: 14px;">
+            {{ icon }} {{ name }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CTA -->
+{% if not current_user.is_authenticated %}
+<div style="text-align: center; padding: 60px 0;">
+    <h2 style="font-size: 28px; margin-bottom: 16px;">Ready to secure your code?</h2>
+    <p style="color: #8b90a8; margin-bottom: 32px;">Free to use. No credit card required.</p>
+    <a href="/register" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px;">Create free account</a>
+</div>
+{% endif %}
+
 {% endblock %}
