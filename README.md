@@ -75,14 +75,23 @@ Open **http://127.0.0.1:5000** in your browser.
 
 ## 🗺 Roadmap
 
-- [x] User authentication
-- [x] Security pattern scanner
-- [x] AI-powered summaries (Groq)
-- [x] File upload scanning
-- [x] Scan history
-- [x] Dashboard with stats
+### ✅ Completed
+- [x] User authentication (login & register)
+- [x] Security pattern scanner (8+ detectors)
+- [x] AI-powered summaries (Groq LLaMA)
+- [x] AI chat assistant (fix & explain code)
+- [x] File upload scanning (.py .js .php .java)
+- [x] Scan history with pagination
+- [x] Dashboard with real stats
+- [x] Profile page with password change
+- [x] Syntax highlighting on results
+- [x] About page
+
+### 🔜 Coming soon
+- [ ] Sidebar AI chat for DSA questions (Java, C++, Python etc.)
 - [ ] PDF report download
-- [ ] More language support
+- [ ] More vulnerability patterns (XSS, path traversal, JWT etc.)
+- [ ] Delete scan feature
 - [ ] GitHub repo scanning
 - [ ] VS Code extension
 
