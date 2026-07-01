@@ -260,6 +260,10 @@ def profile():
                            critical_count=critical_count,
                            recent_scans=recent_scans)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

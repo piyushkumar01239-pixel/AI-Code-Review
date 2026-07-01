@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}About — CodeGuard{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<div style="text-align: center; padding: 60px 0 40px;">
+    <h1 style="font-size: 40px; font-weight: bold; margin-bottom: 16px;">About CodeGuard</h1>
+    <p style="color: #8b90a8; font-size: 18px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        An open source AI-powered security code review tool built to help developers find and fix vulnerabilities fast.
+    </p>
+</div>
+
+<!-- What is it -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 36px; margin-bottom: 20px;">
+    <h2 style="font-size: 20px; margin-bottom: 16px; color: #6c63ff;">🛡 What is CodeGuard?</h2>
+    <p style="color: #8b90a8; font-size: 15px; line-height: 1.8;">
+        CodeGuard is a web-based security code review assistant that helps developers identify security vulnerabilities before deployment.
+        Paste your code or upload a file, and CodeGuard will scan it instantly for common security issues like SQL injection,
+        hardcoded secrets, command injection, weak cryptography and more.
+        Every finding comes with a clear explanation and a concrete fix suggestion.
+        An AI assistant powered by Groq LLaMA is also available to answer questions and rewrite your code securely.
+    </p>
+</div>
+
+<!-- How it works -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 36px; margin-bottom: 20px;">
+    <h2 style="font-size: 20px; margin-bottom: 24px; color: #6c63ff;">⚙️ How it works</h2>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: #6c63ff; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 6px;">Paste or upload your code</h3>
+                <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Supports Python, JavaScript, PHP, Java and more. You can paste code directly or upload a file.</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: #6c63ff; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 6px;">Pattern-based scanning</h3>
+                <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">The scanner checks your code against known vulnerability patterns and assigns severity levels — Critical, High, Medium, or Low.</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: #6c63ff; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 6px;">AI-powered summary</h3>
+                <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Groq LLaMA AI reviews your findings and generates a plain English summary with actionable advice.</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: #6c63ff; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</div>
+            <div>
+                <h3 style="font-size: 15px; margin-bottom: 6px;">Chat assistant</h3>
+                <p style="color: #8b90a8; font-size: 14px; line-height: 1.6;">Ask the AI to fix your code, explain a vulnerability, or rewrite your entire file securely — all in the chat box on the results page.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tech stack -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 36px; margin-bottom: 20px;">
+    <h2 style="font-size: 20px; margin-bottom: 24px; color: #6c63ff;">🛠 Tech stack</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">🐍</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">Python</div>
+            <div style="color: #8b90a8; font-size: 13px;">Core language</div>
+        </div>
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">⚗️</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">Flask</div>
+            <div style="color: #8b90a8; font-size: 13px;">Web framework</div>
+        </div>
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">🗄️</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">SQLite</div>
+            <div style="color: #8b90a8; font-size: 13px;">Database</div>
+        </div>
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">🤖</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">Groq LLaMA</div>
+            <div style="color: #8b90a8; font-size: 13px;">AI engine</div>
+        </div>
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">🔍</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">Regex patterns</div>
+            <div style="color: #8b90a8; font-size: 13px;">Vulnerability detection</div>
+        </div>
+        <div style="background: #22263a; border-radius: 10px; padding: 20px; text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 10px;">🎨</div>
+            <div style="font-weight: 600; margin-bottom: 6px;">Highlight.js</div>
+            <div style="color: #8b90a8; font-size: 13px;">Syntax highlighting</div>
+        </div>
+    </div>
+</div>
+
+<!-- Vulnerabilities detected -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 36px; margin-bottom: 20px;">
+    <h2 style="font-size: 20px; margin-bottom: 24px; color: #6c63ff;">🔍 Vulnerabilities detected</h2>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        {% for sev, color, items in [
+            ('Critical', '#ef4444', ['Hardcoded passwords & API keys', 'SQL Injection', 'Command Injection', 'Unsafe deserialization (pickle)']),
+            ('High', '#f97316', ['Dangerous eval() / exec()', 'Weak cryptography (MD5, SHA1)']),
+            ('Medium', '#f59e0b', ['Flask debug mode exposure'])
+        ] %}
+        <div style="border: 1px solid #2e3352; border-radius: 10px; overflow: hidden;">
+            <div style="background: #22263a; padding: 10px 16px; color: {{ color }}; font-weight: 600; font-size: 14px;">
+                {{ sev }} severity
+            </div>
+            <div style="padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px;">
+                {% for item in items %}
+                <span style="background: #22263a; border: 1px solid #2e3352; padding: 4px 12px; border-radius: 20px; font-size: 13px; color: #8b90a8;">{{ item }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Roadmap -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; padding: 36px; margin-bottom: 20px;">
+    <h2 style="font-size: 20px; margin-bottom: 24px; color: #6c63ff;">🗺 Roadmap</h2>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        {% for done, item in [
+            (True, 'User authentication'),
+            (True, 'Security pattern scanner'),
+            (True, 'AI-powered summaries (Groq)'),
+            (True, 'File upload scanning'),
+            (True, 'Scan history'),
+            (True, 'Dashboard with stats'),
+            (True, 'Profile page'),
+            (True, 'Syntax highlighting'),
+            (False, 'PDF report download'),
+            (False, 'More vulnerability patterns'),
+            (False, 'GitHub repo scanning'),
+            (False, 'VS Code extension'),
+        ] %}
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px;">
+            <span style="color: {% if done %}#22c55e{% else %}#8b90a8{% endif %}; font-size: 16px;">
+                {% if done %}✅{% else %}⬜{% endif %}
+            </span>
+            <span style="color: {% if done %}#e8eaf0{% else %}#8b90a8{% endif %};">{{ item }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- CTA -->
+<div style="text-align: center; padding: 40px 0;">
+    <h2 style="font-size: 24px; margin-bottom: 16px;">Ready to secure your code?</h2>
+    <p style="color: #8b90a8; margin-bottom: 24px;">Free to use. Open source. No credit card required.</p>
+    <a href="/scan" class="btn btn-primary" style="font-size: 16px; padding: 14px 32px; margin-right: 12px;">Start scanning →</a>
+    <a href="https://github.com/piyushkumar01239-pixel/AI-Code-Review" target="_blank" class="btn" style="font-size: 16px; padding: 14px 32px; background: #22263a; color: #e8eaf0;">View on GitHub →</a>
+</div>
+
+{% endblock %}
