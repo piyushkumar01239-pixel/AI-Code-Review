@@ -75,12 +75,12 @@
     {% endif %}
 {% endfor %}
 
-<!-- Code preview -->
-<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; margin-top: 24px;">
+<!-- Code preview with syntax highlighting -->
+<div style="background: #1a1d27; border: 1px solid #2e3352; border-radius: 12px; margin-top: 24px; overflow: hidden;">
     <div style="padding: 16px 24px; border-bottom: 1px solid #2e3352;">
         <h2 style="font-size: 16px;">Scanned code</h2>
     </div>
-    <pre style="background: #0d0f17; padding: 20px; overflow-x: auto; font-family: monospace; font-size: 12px; color: #c8ccdc; line-height: 1.7;">{{ scan.code_snippet }}</pre>
+    <pre style="margin: 0; border-radius: 0;"><code class="language-{{ scan.language }}">{{ scan.code_snippet }}</code></pre>
 </div>
 
 <!-- AI Chat Box -->
@@ -119,6 +119,9 @@
 {% endblock %}
 
 {% block script %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 <script>
     const chatMessages = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
