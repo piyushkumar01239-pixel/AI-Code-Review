@@ -2,11 +2,10 @@ from flask import Flask, render_template, redirect, url_for, flash, request, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from datetime import datetime
 from dotenv import load_dotenv
 import os
-
-from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'py', 'js', 'php', 'java', 'txt'}
 
@@ -135,8 +134,6 @@ def scan():
     if request.method == 'POST':
         code = request.form.get('code', '').strip()
         language = request.form.get('language', 'python')
-
-        # Check if a file was uploaded
         if 'file' in request.files:
             file = request.files['file']
             if file and file.filename != '' and allowed_file(file.filename):
@@ -152,16 +149,13 @@ def scan():
                     'php': 'php',
                     'java': 'java'
                 }.get(ext, 'other')
-
         if not code:
             flash('Please paste code or upload a file.', 'error')
             return render_template('scan.html')
-
         from scanner.analyzer import scan_code, calculate_score, get_ai_summary
         findings_data = scan_code(code)
         score = calculate_score(findings_data)
         ai_summary = get_ai_summary(code, findings_data, language)
-
         new_scan = Scan(user_id=current_user.id,
                 language=language,
                 code_snippet=code,
@@ -169,7 +163,6 @@ def scan():
                 ai_summary=ai_summary)
         db.session.add(new_scan)
         db.session.commit()
-
         for f in findings_data:
             finding = Finding(
                 scan_id=new_scan.id,
@@ -181,7 +174,6 @@ def scan():
             )
             db.session.add(finding)
         db.session.commit()
-
         return redirect(url_for('result', scan_id=new_scan.id))
     return render_template('scan.html')
 
@@ -206,10 +198,8 @@ def chat():
     language = data.get('language', 'python')
     code = data.get('code', '')
     findings = data.get('findings', '')
-
     if not user_message:
         return jsonify({'reply': 'Please type a message.'})
-
     try:
         from groq import Groq
         client = Groq(api_key=os.getenv('GROQ_API_KEY'))
@@ -239,6 +229,36 @@ def chat():
         return jsonify({'reply': reply})
     except Exception as e:
         return jsonify({'reply': f'AI error: {str(e)}'})
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        current_password = request.form.get('current_password', '')
+        new_password = request.form.get('new_password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        if not current_user.check_password(current_password):
+            flash('Current password is incorrect.', 'error')
+        elif new_password != confirm_password:
+            flash('New passwords do not match.', 'error')
+        elif len(new_password) < 6:
+            flash('New password must be at least 6 characters.', 'error')
+        else:
+            current_user.set_password(new_password)
+            db.session.commit()
+            flash('Password updated successfully!', 'success')
+    total_scans = Scan.query.filter_by(user_id=current_user.id).count()
+    total_findings = db.session.query(Finding)\
+        .join(Scan).filter(Scan.user_id == current_user.id).count()
+    critical_count = db.session.query(Finding)\
+        .join(Scan).filter(Scan.user_id == current_user.id, Finding.severity == 'critical').count()
+    recent_scans = Scan.query.filter_by(user_id=current_user.id)\
+                        .order_by(Scan.created_at.desc()).limit(3).all()
+    return render_template('profile.html',
+                           total_scans=total_scans,
+                           total_findings=total_findings,
+                           critical_count=critical_count,
+                           recent_scans=recent_scans)
 
 if __name__ == '__main__':
     with app.app_context():
